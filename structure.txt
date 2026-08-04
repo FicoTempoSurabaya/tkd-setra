@@ -1,0 +1,118 @@
+.
+|-- README.md
+|-- SSoT
+|   |-- 00_stack_technology.md
+|   |-- 01_project_overview.md
+|   |-- 02_user_role.md
+|   |-- 03_authentication.md
+|   |-- 04_participant_flow.md
+|   |-- 05_administration_flow.md
+|   |-- 06_question_bank_test_engine.md
+|   |-- 07_game_engine.md
+|   |-- 08_database_design.md
+|   |-- ai_rules.md
+|   |-- database
+|   |   |-- 01_tables.sql
+|   |   |-- 02_constraints.sql
+|   |   |-- 03_indexes.sql
+|   |   |-- 04_seed.sql
+|   |   `-- schema.sql
+|   `-- design_system.md
+|-- TODO.md
+|-- apps
+|   |-- backend
+|   |   |-- package.json
+|   |   |-- src
+|   |   |   |-- config
+|   |   |   |   `-- index.ts
+|   |   |   |-- db
+|   |   |   |   |-- pool.ts
+|   |   |   |   |-- repositories.ts
+|   |   |   |   `-- sql
+|   |   |   |       |-- 01_tables.sql
+|   |   |   |       |-- 02_constraints.sql
+|   |   |   |       |-- 03_indexes.sql
+|   |   |   |       |-- 04_seed.sql
+|   |   |   |       `-- schema.sql
+|   |   |   |-- index.ts
+|   |   |   |-- routes
+|   |   |   |   |-- admin.routes.ts
+|   |   |   |   |-- game.routes.ts
+|   |   |   |   |-- participant.routes.ts
+|   |   |   |   |-- question.routes.ts
+|   |   |   |   `-- setting.routes.ts
+|   |   |   |-- scripts
+|   |   |   |   |-- seed-admin.ts
+|   |   |   |   `-- setup-db.ts
+|   |   |   `-- utils
+|   |   |       |-- auth.ts
+|   |   |       |-- errors.ts
+|   |   |       |-- logger.ts
+|   |   |       `-- response.ts
+|   |   `-- tsconfig.json
+|   `-- frontend
+|       |-- index.html
+|       |-- package.json
+|       |-- src
+|       |   |-- App.vue
+|       |   |-- assets
+|       |   |   `-- main.css
+|       |   |-- components
+|       |   |   |-- admin
+|       |   |   |   |-- GameFormModal.vue
+|       |   |   |   |-- PreviewModal.vue
+|       |   |   |   |-- QuestionFormModal.vue
+|       |   |   |   `-- RichTextEditor.vue
+|       |   |   `-- games
+|       |   |       |-- SearchWordGame.vue
+|       |   |       `-- SlidingPuzzleGame.vue
+|       |   |-- env.d.ts
+|       |   |-- lib
+|       |   |   |-- api.ts
+|       |   |   |-- axios.ts
+|       |   |   `-- rich-text.ts
+|       |   |-- main.ts
+|       |   |-- router
+|       |   |   `-- index.ts
+|       |   |-- stores
+|       |   |   |-- admin.ts
+|       |   |   `-- participant.ts
+|       |   `-- views
+|       |       |-- LandingView.vue
+|       |       |-- NotFoundView.vue
+|       |       |-- admin
+|       |       |   |-- BankSoalView.vue
+|       |       |   |-- DashboardView.vue
+|       |       |   |-- LoginView.vue
+|       |       |   |-- ParticipantDetailView.vue
+|       |       |   |-- ParticipantsView.vue
+|       |       |   `-- SettingsView.vue
+|       |       `-- participant
+|       |           |-- BiodataView.vue
+|       |           |-- FinishView.vue
+|       |           `-- TestView.vue
+|       |-- tsconfig.json
+|       |-- tsconfig.tsbuildinfo
+|       `-- vite.config.ts
+|-- package.json
+|-- packages
+|   `-- shared
+|       |-- package.json
+|       |-- src
+|       |   |-- constants
+|       |   |   `-- index.ts
+|       |   |-- index.ts
+|       |   |-- schemas
+|       |   |   `-- index.ts
+|       |   |-- types
+|       |   |   `-- index.ts
+|       |   `-- utils
+|       |       `-- index.ts
+|       `-- tsconfig.json
+|-- pnpm-lock.yaml
+|-- pnpm-workspace.yaml
+|-- skills-lock.json
+|-- structure.txt
+`-- tsconfig.base.json
+
+30 directories, 85 files
