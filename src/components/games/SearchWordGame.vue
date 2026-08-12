@@ -71,7 +71,7 @@ function createRandom(seed: string): () => number {
 
 function buildGrid() {
   const random = createRandom(props.seed ? `${props.seed}-${props.game.gameId}` : `${Date.now()}-${Math.random()}`);
-  const wordsList = props.game.searchWordItems.map((item) => ({
+const wordsList = (props.game.searchWordItems ?? []).map((item) => ({
     word: item.word.toUpperCase(),
     searchWordItemId: item.searchWordItemId,
     found: false,

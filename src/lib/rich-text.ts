@@ -7,11 +7,26 @@ const ALLOWED_TAGS: Record<string, string> = {
   EM: 'em',
   I: 'em',
   U: 'u',
+  S: 's',
+  STRIKE: 's',
+  DEL: 'del',
   UL: 'ul',
   OL: 'ol',
   LI: 'li',
   SPAN: 'span',
+  MARK: 'mark',
   FONT: 'span',
+  A: 'a',
+  H1: 'h1',
+  H2: 'h2',
+  H3: 'h3',
+  BLOCKQUOTE: 'blockquote',
+  PRE: 'pre',
+  CODE: 'code',
+  HR: 'hr',
+  IMG: 'img',
+  SUP: 'sup',
+  SUB: 'sub',
 };
 
 const FONT_SIZES: Record<string, string> = {
@@ -25,6 +40,19 @@ const FONT_SIZES: Record<string, string> = {
 };
 
 const ALLOWED_FONT_FAMILIES = new Set(['Arial', 'Georgia', 'Tahoma', 'Times New Roman', 'Verdana']);
+const ALLOWED_TEXT_ALIGN = new Set(['left', 'center', 'right', 'justify']);
+
+/** Validates URI scheme to avoid javascript: etc. when persisting links. */
+function isSafeUrl(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  try {
+    const url = new URL(trimmed, window.location.href);
+    return ['http:', 'https:', 'mailto:', 'tel:'].includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
 
 export interface ParticipantTagData {
   fullName: string;
@@ -55,10 +83,12 @@ export function sanitizeRichHtml(html: string): string {
       return;
     }
 
-    const cleanElement = document.createElement(tagName);
+const cleanElement = document.createElement(tagName);
     const fontFamily = element.getAttribute('face') ?? element.style.fontFamily;
     const fontSize = element.getAttribute('size') ?? element.style.fontSize;
     const textAlign = element.getAttribute('align') ?? element.style.textAlign;
+    const color = element.style.color;
+    const backgroundColor = element.style.backgroundColor;
 
     if (fontFamily && ALLOWED_FONT_FAMILIES.has(fontFamily.replaceAll('"', '').trim())) {
       cleanElement.style.fontFamily = fontFamily.replaceAll('"', '').trim();
@@ -66,8 +96,47 @@ export function sanitizeRichHtml(html: string): string {
     if (fontSize && (FONT_SIZES[fontSize] || /^\d{1,2}(?:px|pt)$/.test(fontSize))) {
       cleanElement.style.fontSize = FONT_SIZES[fontSize] ?? fontSize;
     }
-    if (textAlign && ['left', 'center', 'right', 'justify'].includes(textAlign)) {
+    if (textAlign && ALLOWED_TEXT_ALIGN.has(textAlign)) {
       cleanElement.style.textAlign = textAlign;
+    }
+    if (color && /^#[0-9a-fA-F]{3,8}$/.test(color?.trim())) {
+      cleanElement.style.color = color.trim();
+    }
+    if (backgroundColor && /^#[0-9a-fA-F]{3,8}$/.test(backgroundColor?.trim())) {
+      cleanElement.style.backgroundColor = backgroundColor.trim();
+    }
+
+    // Hanya pertahankan <a> dengan href yang aman (http/https/mailto/tel).
+    if (tagName === 'a') {
+      const href = element.getAttribute('href');
+      if (href && isSafeUrl(href)) {
+        cleanElement.setAttribute('href', href);
+        const target = element.getAttribute('target');
+        if (target) cleanElement.setAttribute('target', target);
+        const rel = element.getAttribute('rel');
+        if (rel) cleanElement.setAttribute('rel', rel);
+      } else {
+        // Anggap sebagai teks biasa sehingga isi tautan tetap tampil.
+        for (const child of Array.from(element.childNodes)) copyNode(child, target);
+        return;
+      }
+    }
+
+    // Hanya pertahankan <img> dengan src yang aman (http/https).
+    if (tagName === 'img') {
+      const src = element.getAttribute('src');
+      if (src && isSafeUrl(src)) {
+        cleanElement.setAttribute('src', src);
+        const alt = element.getAttribute('alt');
+        if (alt) cleanElement.setAttribute('alt', alt);
+        const width = element.getAttribute('width');
+        if (width) cleanElement.setAttribute('width', width);
+        const height = element.getAttribute('height');
+        if (height) cleanElement.setAttribute('height', height);
+      } else {
+        // Gambar tidak aman diabaikan.
+        return;
+      }
     }
 
     for (const child of Array.from(element.childNodes)) copyNode(child, cleanElement);

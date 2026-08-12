@@ -38,8 +38,8 @@ export const adminApi = {
     return res.data;
   },
 
-  checkSession: async () => {
-    const res = await client.get<ApiResponse<{ authenticated: boolean }>>('/admin/session');
+checkSession: async () => {
+    const res = await client.get<ApiResponse<{ administratorId: string }>>('/admin/me');
     return res.data;
   },
 
@@ -184,7 +184,7 @@ export const adminParticipantApi = {
 // ============================================================
 export const adminQuestionApi = {
   list: async (params: PaginationInput) => {
-    const res = await client.get<ApiListResponse<Question>>('/admin/questions', { params });
+    const res = await client.get<ApiListResponse<Question>>('/admin/questions/all', { params });
     return res.data;
   },
 
@@ -210,7 +210,7 @@ export const adminQuestionApi = {
 // ============================================================
 export const adminGameApi = {
   list: async (params: PaginationInput) => {
-    const res = await client.get<ApiListResponse<Game>>('/admin/games', { params });
+    const res = await client.get<ApiListResponse<Game>>('/admin/games/all', { params });
     return res.data;
   },
 

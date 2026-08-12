@@ -3,8 +3,8 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ArrowLeft } from 'lucide-vue-next';
 import { useAdminStore } from '@/stores/admin.js';
-import { formatDateId, formatDuration } from '@tkd-setra/shared';
-import type { ParticipantDetail } from '@tkd-setra/shared';
+import { formatDateId, formatDuration } from '@/lib/shared.js';
+import type { ParticipantDetail } from '@/lib/shared.js';
 
 const route = useRoute();
 const router = useRouter();

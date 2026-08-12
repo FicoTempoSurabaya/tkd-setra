@@ -18,7 +18,7 @@ INSERT INTO administrator (
     password_hash
 )
 VALUES (
-    '$argon2id$v=19$m=65536,t=3,p=4$CHANGE_THIS_WITH_REAL_HASH'
+    '$argon2id$v=19$m=16,t=2,p=1$cEVVaG5wTkxMa01nZ1Exdg$s1lkjkHkM1gzvJSD+iH68g'
 );
 
 -- ============================================================

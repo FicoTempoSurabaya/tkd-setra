@@ -2,13 +2,10 @@
  * Fastify App Factory (Serverless)
  */
 
-import Fastify from 'fastify';
+import Fastify, { type FastifyInstance } from 'fastify';
 import { getConfig } from './config.js';
 import { setupAuth } from './auth.js';
-import {
-  participantPublicRoutes,
-  participantAdminRoutes,
-} from './participant.routes.js';
+import { participantPublicRoutes, participantAdminRoutes } from './participant.routes.js';
 import { adminAuthRoutes, adminProtectedRoutes } from './admin.routes.js';
 import { questionRoutes } from './question.routes.js';
 import { gameRoutes } from './game.routes.js';
@@ -40,7 +37,7 @@ export async function createFastifyApp(): Promise<FastifyInstance> {
   await setupAuth(fastify);
 
   // Error Handler
-  fastify.setErrorHandler((error: any, request: any, reply: any) => {
+fastify.setErrorHandler((error: any, _request: any, reply: any) => {
     if (error instanceof Error && error.name === 'ZodError') {
       return reply.code(400).send({
         success: false,
@@ -80,13 +77,22 @@ export async function createFastifyApp(): Promise<FastifyInstance> {
     { prefix: '/api/admin' },
   );
 
-  // Admin protected routes
+// Admin protected routes
   await fastify.register(
     (instance: FastifyInstance) => {
       instance.addHook('preHandler', fastify.authenticateAdmin as any);
       adminProtectedRoutes(instance);
     },
     { prefix: '/api/admin' },
+  );
+
+  // Admin participant routes (paginated list + detail)
+  await fastify.register(
+    (instance: FastifyInstance) => {
+      instance.addHook('preHandler', fastify.authenticateAdmin as any);
+      participantAdminRoutes(instance);
+    },
+    { prefix: '/api/admin/participants' },
   );
 
   // Question routes

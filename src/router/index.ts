@@ -88,8 +88,8 @@ router.beforeEach(async (to) => {
   if (to.meta.requiresAuth) {
     const { adminApi } = await import('@/lib/api.js');
     try {
-      const res = await adminApi.checkSession();
-      if (!res.data?.authenticated) {
+const res = await adminApi.checkSession();
+      if (!res.success) {
         return { name: 'admin-login' };
       }
     } catch {

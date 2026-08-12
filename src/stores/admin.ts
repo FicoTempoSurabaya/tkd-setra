@@ -44,8 +44,8 @@ export const useAdminStore = defineStore('admin', () => {
     isLoading.value = true;
     error.value = '';
     try {
-      const res = await adminApi.login({ password });
-      isAuthenticated.value = res.data?.authenticated ?? false;
+const res = await adminApi.login({ password });
+      isAuthenticated.value = res.success;
       return res;
     } catch (e: unknown) {
       error.value = (e as { message?: string }).message ?? 'Gagal login';
@@ -64,9 +64,9 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   async function checkSession() {
-    try {
+try {
       const res = await adminApi.checkSession();
-      isAuthenticated.value = res.data?.authenticated ?? false;
+      isAuthenticated.value = res.success;
       return isAuthenticated.value;
     } catch {
       isAuthenticated.value = false;

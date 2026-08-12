@@ -12,7 +12,7 @@
 
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import { Eye, X } from 'lucide-vue-next';
-import { SLIDING_PUZZLE_SIZE, shuffle, type SnapshotGame } from '@tkd-setra/shared';
+import { SLIDING_PUZZLE_SIZE, shuffle, type SnapshotGame } from '@/lib/shared.js';
 
 const props = defineProps<{
   game: SnapshotGame;

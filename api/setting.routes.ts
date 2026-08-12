@@ -4,15 +4,15 @@
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { settingRepository } from './repositories.js';
-import { sendSuccess, sendError } from './response.js';
+import { sendSuccess } from './response.js';
 import { ValidationError } from './errors.js';
 import { updateSettingSchema } from './schemas.js';
 
 export function settingRoutes(fastify: FastifyInstance): void {
   // GET /api/admin/settings
-  fastify.get('/', async (request: FastifyReply) => {
+  fastify.get('/', async (_request: FastifyRequest, reply: FastifyReply) => {
     const setting = await settingRepository.get();
-    return sendSuccess(request, 'Pengaturan', setting);
+    return sendSuccess(reply, 'Pengaturan', setting);
   });
 
   // PATCH /api/admin/settings

@@ -27,8 +27,8 @@ import {
   submitQuizAnswerSchema,
   submitGameResultSchema,
   paginationSchema,
-  calculateRemainingSeconds,
 } from './schemas.js';
+import { calculateRemainingSeconds } from './utils.js';
 
 export function participantPublicRoutes(fastify: FastifyInstance): void {
   // POST /api/participant/biodata
@@ -61,7 +61,15 @@ export function participantPublicRoutes(fastify: FastifyInstance): void {
       throw new ConflictError('Email sudah terdaftar.');
     }
 
-    const participant = await participantRepository.create(data);
+const participant = await participantRepository.create({
+      fullName: data.fullName,
+      birthPlace: data.birthPlace,
+      birthDate: data.birthDate,
+      nik: data.nik,
+      address: data.address,
+      whatsapp: data.whatsapp,
+      email: data.email,
+    });
     const test = await participantTestRepository.create({
       participantId: participant.participantId,
       quizDuration: setting.quizDuration,
@@ -245,25 +253,23 @@ export function participantPublicRoutes(fastify: FastifyInstance): void {
         throw new ConflictError('Tidak ada soal yang sedang ditampilkan.');
       }
 
-      const existingAnswer = await quizAnswerRepository.findByTestAndQuestion(
+const existingAnswer = await quizAnswerRepository.findByTestAndQuestion(
         test.participantTestId,
         test.currentQuizQuestionId,
       );
-      if (existingAnswer) {
-        throw new ConflictError('Soal ini sudah dijawab.');
+      if (!existingAnswer) {
+        await quizAnswerRepository.create({
+          participantTestId: test.participantTestId,
+          questionId: test.currentQuizQuestionId,
+          questionOptionId: parsed.data.questionOptionId,
+        });
       }
-
-      await quizAnswerRepository.create({
-        participantTestId: test.participantTestId,
-        questionId: test.currentQuizQuestionId,
-        questionOptionId: parsed.data.questionOptionId,
-      });
 
       const allQuestions = await snapshotRepository.getQuizSnapshot();
       const currentIndex = allQuestions.findIndex(
         (q) => q.questionId === test.currentQuizQuestionId,
       );
-      const nextQuestion =
+const nextQuestion =
         currentIndex >= 0 && currentIndex < allQuestions.length - 1
           ? allQuestions[currentIndex + 1]
           : null;

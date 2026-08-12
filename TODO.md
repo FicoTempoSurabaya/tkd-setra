@@ -1,26 +1,20 @@
-# TODO - Frontend Game & Question Fixes
+# TODO - Rebuild Rich Text Editor (Tiptap "Simple Editor Template")
 
-## 1. Word Search - Mobile drag fix (SearchWordGame.vue)
-- [x] Rework pointer handling: `@pointerdown.prevent` on grid, `setPointerCapture`, resolve cell via `closest`.
-- [x] Ensure `touch-none`/`select-none` retained.
+## Tujuan
+Hapus total editor contenteditable & rebuild ulang memakai template "Simple Editor Template" Tiptap
+dengan SEMUA fitur open source, lalu sesuaikan tampilan dengan tema Retro Neo Brutalism, dan
+tambahkan fitur preview peserta.
 
-## 2. Word Search - Stable board on refresh (SearchWordGame.vue / TestView.vue)
-- [x] Confirm `:seed="publicToken"` passed (stable per participant) — already done.
-- [x] Confirm preview omits seed (fresh board per preview) — already done.
-
-## 3. Sliding Puzzle - Smooth animation (SlidingPuzzleGame.vue)
-- [x] Replace `TransitionGroup` with absolute-positioned tiles animated via `transform` transitions.
-
-## 4. Sliding Puzzle - Lightbox overlay (SlidingPuzzleGame.vue)
-- [x] Harden lightbox: body scroll lock + ESC-to-close.
-
-## 5. Semantic Differential Scale - Horizontal scroll (TestView.vue + PreviewModal.vue)
-- [x] Rework layout to `overflow-x-auto` + `w-max` inner with `flex-shrink-0` labels/buttons (TestView.vue).
-- [x] Apply same fix to PreviewModal.vue.
-
-## 6. Image Based Answer - 2x2 grid (TestView.vue + PreviewModal.vue)
-- [x] Confirm `grid-cols-2` layout — already correct.
-
-## Follow-up
-- [ ] Type-check / build frontend.
-- [ ] Manual QA on mobile.
+## Langkah
+- [x] Install dependensi Tiptap tambahan: `@tiptap/extension-image`, `@tiptap/extension-superscript`, `@tiptap/extension-subscript`.
+- [x] Tulis ulang total `src/components/admin/RichTextEditor.vue` (template Simple Editor Tiptap):
+      Undo/Redo, Heading (H1-H3), Paragraph, Bold, Italic, Strike, Underline, Superscript,
+      Subscript, Code, Highlight, Color, Link, Image (URL), Bullet & Ordered List, Blockquote,
+      Code Block, Alignment, Horizontal Rule, Placeholder.
+- [x] Perluas `src/lib/rich-text.ts`: tag `blockquote`, `pre`, `code`, `h1-h3`, `hr`, `img`
+      (validasi URL), `sup`, `sub`, `a`, `mark` + atribut warna/align/font.
+- [x] Sesuaikan `src/assets/main.css` untuk tampilan toolbar & konten editor (Retro Neo Brutalism).
+- [x] Tambah fitur **Preview Peserta** di `SettingsView.vue` (render via `personalizeRichHtml`
+      seperti tampilan yang diterima participant).
+- [x] Typecheck (`pnpm typecheck`) & build (`pnpm build`) → EXIT 0.
+- [ ] QA manual editor + preview di Settings.

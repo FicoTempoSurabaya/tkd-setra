@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { Search, Plus, ChevronLeft, ChevronRight, Ban, Eye } from 'lucide-vue-next';
 import { useAdminStore } from '@/stores/admin.js';
-import { truncate, type Game, type Question } from '@tkd-setra/shared';
+import { truncate, type Game, type Question } from '@/lib/shared.js';
 import QuestionFormModal from '@/components/admin/QuestionFormModal.vue';
 import GameFormModal from '@/components/admin/GameFormModal.vue';
 import PreviewModal from '@/components/admin/PreviewModal.vue';

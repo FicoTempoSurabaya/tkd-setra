@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { Save } from 'lucide-vue-next';
+import { Eye, Save, X } from 'lucide-vue-next';
 import { useAdminStore } from '@/stores/admin.js';
 import RichTextEditor from '@/components/admin/RichTextEditor.vue';
-import { contentToRichHtml, sanitizeRichHtml } from '@/lib/rich-text.js';
+import { contentToRichHtml, personalizeRichHtml, sanitizeRichHtml } from '@/lib/rich-text.js';
 
 const adminStore = useAdminStore();
 const quizDuration = ref(0);
@@ -13,6 +13,34 @@ const timeoutText = ref('');
 const maintenanceMode = ref(false);
 const isSaving = ref(false);
 const message = ref('');
+
+// ===== Preview Peserta =====
+const previewTitle = ref('');
+const previewHtml = ref('');
+const previewIsTimeout = ref(false);
+const showPreview = ref(false);
+
+// Contoh data participant untuk mengganti tag biodata pada preview.
+const SAMPLE_PARTICIPANT = {
+  fullName: 'Budi Santoso',
+  birthPlace: 'Bandung',
+  birthDate: '1998-05-12T00:00:00.000Z',
+  nik: '3201234567890001',
+  address: 'Jl. Merdeka No. 10, Bandung',
+  whatsapp: '6281234567890',
+  email: 'budi.santoso@example.com',
+};
+
+function openPreview(title: string, content: string, isTimeout = false) {
+  previewTitle.value = title;
+  previewIsTimeout.value = isTimeout;
+  previewHtml.value = personalizeRichHtml(content, SAMPLE_PARTICIPANT);
+  showPreview.value = true;
+}
+
+function closePreview() {
+  showPreview.value = false;
+}
 
 function buildRichContent(html: string) {
   return { type: 'html', html: sanitizeRichHtml(html) };
@@ -66,7 +94,17 @@ onMounted(async () => {
       </div>
 
       <div class="border-t-2 border-brutal-dark pt-5">
-        <label class="label-brutal" for="instruction">Isi Instruksi Tes</label>
+        <div class="flex items-center justify-between mb-2">
+          <label class="label-brutal mb-0" for="instruction">Isi Instruksi Tes</label>
+          <button
+            class="btn-brutal !py-1 !px-3 !text-xs"
+            title="Lihat tampilan peserta"
+            @click="openPreview('Instruksi Tes', instructionText)"
+          >
+            <Eye :size="14" />
+            Preview
+          </button>
+        </div>
         <RichTextEditor
           v-model="instructionText"
           editor-id="instruction"
@@ -75,7 +113,17 @@ onMounted(async () => {
       </div>
 
       <div class="border-t-2 border-brutal-dark pt-5">
-        <label class="label-brutal" for="success">Isi Ucapan Terima Kasih</label>
+        <div class="flex items-center justify-between mb-2">
+          <label class="label-brutal mb-0" for="success">Isi Ucapan Terima Kasih</label>
+          <button
+            class="btn-brutal !py-1 !px-3 !text-xs"
+            title="Lihat tampilan peserta"
+            @click="openPreview('Ucapan Terima Kasih', successText)"
+          >
+            <Eye :size="14" />
+            Preview
+          </button>
+        </div>
         <RichTextEditor
           v-model="successText"
           editor-id="success"
@@ -84,7 +132,17 @@ onMounted(async () => {
       </div>
 
       <div class="border-t-2 border-brutal-dark pt-5">
-        <label class="label-brutal" for="timeout">Isi Ucapan Maaf</label>
+        <div class="flex items-center justify-between mb-2">
+          <label class="label-brutal mb-0" for="timeout">Isi Ucapan Maaf</label>
+          <button
+            class="btn-brutal !py-1 !px-3 !text-xs"
+            title="Lihat tampilan peserta"
+            @click="openPreview('Ucapan Maaf', timeoutText, true)"
+          >
+            <Eye :size="14" />
+            Preview
+          </button>
+        </div>
         <RichTextEditor
           v-model="timeoutText"
           editor-id="timeout"
@@ -119,6 +177,52 @@ onMounted(async () => {
         <Save :size="18" />
         {{ isSaving ? 'Menyimpan...' : 'Simpan Pengaturan' }}
       </button>
+    </div>
+
+    <!-- Modal Preview Peserta -->
+    <div
+      v-if="showPreview"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      @click.self="closePreview"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-fade-in"
+      >
+        <!-- Header -->
+        <div class="flex items-center justify-between p-6 border-b-4 border-black sticky top-0 bg-white">
+          <h3 class="text-lg font-black">Preview Peserta: {{ previewTitle }}</h3>
+          <button class="btn-brutal !py-1 !px-2" @click="closePreview">
+            <X :size="16" />
+          </button>
+        </div>
+
+        <!-- Body: tampilan seperti yang diterima participant -->
+        <div class="p-6">
+          <div
+            class="w-20 h-20 mx-auto mb-4 border-[3px] border-brutal-dark flex items-center justify-center"
+            :class="previewIsTimeout ? 'bg-brutal-danger' : 'bg-brutal-success'"
+            style="box-shadow: 4px 4px 0px 0px #1a1a1a"
+          >
+            <span class="text-white text-3xl font-black">{{ previewIsTimeout ? '!' : '✓' }}</span>
+          </div>
+
+          <div class="rich-content text-lg text-center">
+            <div v-if="previewHtml" v-html="previewHtml"></div>
+            <p v-else>
+              {{ previewIsTimeout ? 'Maaf, waktu tes telah habis.' : 'Terima kasih telah menyelesaikan tes.' }}
+            </p>
+          </div>
+
+          <p class="text-xs text-gray-500 text-center mt-4">
+            Tag biodata ditampilkan dengan contoh data (Budi Santoso).
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 p-6 border-t-4 border-black sticky bottom-0 bg-white">
+          <button class="btn-brutal !py-2 !px-6" @click="closePreview">Tutup</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

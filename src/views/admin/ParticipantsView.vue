@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { useAdminStore } from '@/stores/admin.js';
-import { formatDateId } from '@tkd-setra/shared';
+import { formatDateId } from '@/lib/shared.js';
 
 const router = useRouter();
 const adminStore = useAdminStore();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
 import { X, Plus, Eye } from 'lucide-vue-next';
-import { GAME_TYPES, type SnapshotGame } from '@tkd-setra/shared';
+import { GAME_TYPES, type SnapshotGame } from '@/lib/shared.js';
 import { useAdminStore } from '@/stores/admin.js';
 import PreviewModal from '@/components/admin/PreviewModal.vue';
 

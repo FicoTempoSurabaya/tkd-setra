@@ -4,26 +4,26 @@
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { gameRepository } from './repositories.js';
-import { sendSuccess, sendList, sendError } from './response.js';
+import { sendSuccess, sendList } from './response.js';
 import { NotFoundError, ValidationError } from './errors.js';
 import { createGameSchema } from './schemas.js';
 
 export function gameRoutes(fastify: FastifyInstance): void {
   // GET /api/admin/games
-  fastify.get('/', async (request: FastifyReply) => {
+  fastify.get('/', async (_request: FastifyRequest, reply: FastifyReply) => {
     const games = await gameRepository.listActive();
-    return sendSuccess(request, 'Daftar game', games);
+    return sendSuccess(reply, 'Daftar game', games);
   });
 
   // GET /api/admin/games/all
-  fastify.get('/all', async (request: FastifyReply) => {
+  fastify.get('/all', async (request: FastifyRequest, reply: FastifyReply) => {
     const query = request.query as { page?: string; perPage?: string; search?: string };
     const page = Number(query.page) || 1;
     const perPage = Number(query.perPage) || 10;
     const search = query.search;
 
     const result = await gameRepository.listAll({ page, perPage, search });
-    return sendList(request, 'Daftar game', result.items, result.total, page, perPage);
+    return sendList(reply, 'Daftar game', result.items, result.total, page, perPage);
   });
 
   // GET /api/admin/games/:id
@@ -48,7 +48,15 @@ export function gameRoutes(fastify: FastifyInstance): void {
       throw new ValidationError('Data tidak valid', errors);
     }
 
-    const game = await gameRepository.create(parsed.data);
+const game = await gameRepository.create({
+gameType: parsed.data.gameType,
+      title: parsed.data.title ?? '',
+      imageUrl: parsed.data.imageUrl ?? null,
+      duration: parsed.data.duration,
+      searchWordItems: parsed.data.searchWordItems?.map((item) => ({
+        word: item.word,
+      })),
+    });
     return sendSuccess(reply, 'Game berhasil dibuat', game, 201);
   });
 

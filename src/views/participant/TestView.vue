@@ -125,7 +125,7 @@ async function loadCurrentGame() {
       router.push(`/participant/finish/${publicToken.value}`);
       return;
     }
-    if (res?.game) {
+if (res?.game) {
       currentGameSnapshot.value = {
         gameId: res.game.gameId,
         gameType: res.game.gameType,
@@ -133,7 +133,7 @@ async function loadCurrentGame() {
         title: res.game.title,
         imageUrl: res.game.imageUrl,
         duration: res.game.duration,
-        searchWordItems: res.game.searchWordItems.map(
+        searchWordItems: (res.game.searchWordItems ?? []).map(
           (item: { word: string; searchWordItemId: string }) => ({
             word: item.word,
             searchWordItemId: item.searchWordItemId,
@@ -172,7 +172,7 @@ async function handleGameComplete(data: {
       return;
     }
 
-    if (res?.game) {
+if (res?.game) {
       currentGameSnapshot.value = {
         gameId: res.game.gameId,
         gameType: res.game.gameType,
@@ -180,7 +180,7 @@ async function handleGameComplete(data: {
         title: res.game.title,
         imageUrl: res.game.imageUrl,
         duration: res.game.duration,
-        searchWordItems: res.game.searchWordItems.map(
+        searchWordItems: (res.game.searchWordItems ?? []).map(
           (item: { word: string; searchWordItemId: string }) => ({
             word: item.word,
             searchWordItemId: item.searchWordItemId,

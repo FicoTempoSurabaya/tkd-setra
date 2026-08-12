@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import SlidingPuzzleGame from '@/components/games/SlidingPuzzleGame.vue';
 import SearchWordGame from '@/components/games/SearchWordGame.vue';
-import { formatDuration, type SnapshotGame } from '@tkd-setra/shared';
+import { formatDuration, type SnapshotGame } from '@/lib/shared.js';
 
 const props = defineProps<{
   show: boolean;
