@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ArrowLeft } from 'lucide-vue-next';
+import { ArrowLeft } from '@lucide/vue';
 import { useAdminStore } from '@/stores/admin.js';
 import { formatDateId, formatDuration } from '@/lib/shared.js';
 import type { ParticipantDetail } from '@/lib/shared.js';

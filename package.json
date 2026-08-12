@@ -6,12 +6,12 @@
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": "22.x",
+    "node": "24.x",
     "pnpm": "10.x"
   },
   "scripts": {
     "dev": "vite",
-    "api:dev": "tsx api/dev-server.ts",
+    "api:dev": "tsx src/server/dev-server.ts",
     "dev:full": "concurrently \"pnpm api:dev\" \"pnpm dev\"",
     "build": "vue-tsc --noEmit && vite build",
     "vercel-build": "vue-tsc --noEmit && vite build",
@@ -26,6 +26,7 @@
     "@fastify/helmet": "^13.0.0",
     "@fastify/jwt": "^9.0.0",
     "@fastify/multipart": "^9.0.0",
+    "@lucide/vue": "^1.31.0",
     "@tiptap/core": "^3.29.2",
     "@tiptap/extension-color": "^3.29.2",
     "@tiptap/extension-font-family": "^3.29.2",
@@ -44,7 +45,6 @@
     "axios": "^1.7.0",
     "dotenv": "^16.4.5",
     "fastify": "^5.0.0",
-    "lucide-vue-next": "^0.439.0",
     "motion-v": "^0.10.0",
     "pg": "^8.13.0",
     "pinia": "^2.2.0",

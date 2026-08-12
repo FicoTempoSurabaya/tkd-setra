@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { User, Lock } from 'lucide-vue-next';
+import { User, Lock } from '@lucide/vue';
 
 const router = useRouter();
 </script>

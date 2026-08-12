@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { Search, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { useAdminStore } from '@/stores/admin.js';
 import { formatDateId } from '@/lib/shared.js';
 

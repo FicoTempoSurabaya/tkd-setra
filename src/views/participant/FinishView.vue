@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { CheckCircle, AlertCircle, MessageCircle } from 'lucide-vue-next';
+import { CheckCircle, AlertCircle, MessageCircle } from '@lucide/vue';
 import { participantApi } from '@/lib/api.js';
 import { personalizeRichHtml } from '@/lib/rich-text.js';
 

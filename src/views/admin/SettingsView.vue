@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { Eye, Save, X } from 'lucide-vue-next';
+import { Eye, Save, X } from '@lucide/vue';
 import { useAdminStore } from '@/stores/admin.js';
 import RichTextEditor from '@/components/admin/RichTextEditor.vue';
 import { contentToRichHtml, personalizeRichHtml, sanitizeRichHtml } from '@/lib/rich-text.js';

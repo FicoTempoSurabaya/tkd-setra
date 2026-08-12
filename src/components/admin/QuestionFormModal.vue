@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
-import { X, Plus, Eye } from 'lucide-vue-next';
+import { X, Plus, Eye } from '@lucide/vue';
 import { QUIZ_QUESTION_TYPES } from '@/lib/shared.js';
 import { useAdminStore } from '@/stores/admin.js';
 import PreviewModal from '@/components/admin/PreviewModal.vue';

@@ -7,6 +7,6 @@
     "outDir": "api-dist",
     "verbatimModuleSyntax": true
   },
-  "include": ["api/**/*.ts"],
-  "exclude": ["node_modules", "dist", "src"]
+  "include": ["api/**/*.ts", "src/server/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/components", "src/views", "src/stores", "src/router", "src/assets"]
 }

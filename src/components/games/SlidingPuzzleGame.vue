@@ -11,7 +11,7 @@
  */
 
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-import { Eye, X } from 'lucide-vue-next';
+import { Eye, X } from '@lucide/vue';
 import { SLIDING_PUZZLE_SIZE, shuffle, type SnapshotGame } from '@/lib/shared.js';
 
 const props = defineProps<{

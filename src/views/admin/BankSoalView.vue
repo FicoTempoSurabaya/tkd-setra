@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { Search, Plus, ChevronLeft, ChevronRight, Ban, Eye } from 'lucide-vue-next';
+import { Search, Plus, ChevronLeft, ChevronRight, Ban, Eye } from '@lucide/vue';
 import { useAdminStore } from '@/stores/admin.js';
 import { truncate, type Game, type Question } from '@/lib/shared.js';
 import QuestionFormModal from '@/components/admin/QuestionFormModal.vue';

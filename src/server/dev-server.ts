@@ -1,7 +1,7 @@
 /**
  * Local Development Server for Backend
  * Runs the Fastify app locally on port 3000
- * Usage: pnpm api:dev or npx tsx api/dev-server.ts
+ * Usage: pnpm api:dev or npx tsx src/server/dev-server.ts
  */
 
 import { getConfig } from './config.js';

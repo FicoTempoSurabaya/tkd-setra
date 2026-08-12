@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { ArrowLeft, Lock } from 'lucide-vue-next';
+import { ArrowLeft, Lock } from '@lucide/vue';
 import { useAdminStore } from '@/stores/admin.js';
 
 const router = useRouter();

@@ -7,7 +7,7 @@
  * This is the recommended pattern for Fastify v5 + Vercel serverless.
  */
 
-import { createFastifyApp } from './app.js';
+import { createFastifyApp } from '../src/server/app.js';
 import type { FastifyInstance } from 'fastify';
 
 let app: FastifyInstance | null = null;

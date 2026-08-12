@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { ArrowLeft } from 'lucide-vue-next';
+import { ArrowLeft } from '@lucide/vue';
 import { biodataSchema, normalizeWhatsapp } from '@/lib/shared.js';
 import { participantApi } from '@/lib/api.js';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useRouter, RouterView, RouterLink } from 'vue-router';
-import { LogOut, Users, BookOpen, Settings } from 'lucide-vue-next';
+import { LogOut, Users, BookOpen, Settings } from '@lucide/vue';
 import { useAdminStore } from '@/stores/admin.js';
 
 const router = useRouter();

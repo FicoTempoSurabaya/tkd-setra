@@ -40,7 +40,7 @@ Bold,
   Text,
   Underline as UnderlineIcon,
   Undo,
-} from 'lucide-vue-next';
+} from '@lucide/vue';
 import { sanitizeRichHtml } from '@/lib/rich-text.js';
 
 const props = defineProps<{
