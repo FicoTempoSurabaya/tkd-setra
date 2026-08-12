@@ -52,6 +52,8 @@ async function init() {
         phase.value = 'quiz';
         await loadCurrentQuiz();
       }
+      // Lanjutkan sesi sebelumnya di layar penuh
+      await requestFullscreen();
     }
   } catch (e: unknown) {
     error.value = (e as { message?: string }).message ?? 'Gagal memuat tes';
@@ -73,6 +75,8 @@ async function startTest() {
     await store.startTest(publicToken.value);
     phase.value = 'quiz';
     await loadCurrentQuiz();
+    // Masuk ke layar penuh agar terasa seperti aplikasi native
+    await requestFullscreen();
   } catch (e: unknown) {
     error.value = (e as { message?: string }).message ?? 'Gagal memulai tes';
   } finally {
@@ -122,6 +126,7 @@ async function loadCurrentGame() {
   try {
     const res = await store.loadGame(publicToken.value);
     if (res?.testFinished) {
+      await exitFullscreen();
       router.push(`/participant/finish/${publicToken.value}`);
       return;
     }
@@ -168,6 +173,7 @@ async function handleGameComplete(data: {
     });
 
     if (res?.testFinished) {
+      await exitFullscreen();
       router.push(`/participant/finish/${publicToken.value}`);
       return;
     }
@@ -204,6 +210,7 @@ function startTimer(seconds: number) {
     if (displayRemaining.value <= 0) {
       stopTimer();
       if (phase.value === 'quiz') {
+        void exitFullscreen();
         router.push(`/participant/finish/${publicToken.value}`);
       }
     }
@@ -217,12 +224,57 @@ function stopTimer() {
   }
 }
 
+/**
+ * Meminta layar penuh agar tes terasa seperti aplikasi native
+ * (menyembunyikan address bar dan home bar).
+ */
+async function requestFullscreen() {
+  try {
+    const doc = window.document;
+    const descr =
+      doc.fullscreenEnabled ||
+      (doc as unknown as { webkitFullscreenEnabled?: boolean }).webkitFullscreenEnabled ||
+      (doc as unknown as { mozFullScreenEnabled?: boolean }).mozFullScreenEnabled;
+
+    if (!descr) return;
+
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      await elem.requestFullscreen();
+    } else if ((elem as unknown as { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen) {
+      await (elem as unknown as { webkitRequestFullscreen: () => Promise<void> }).webkitRequestFullscreen();
+    } else if ((elem as unknown as { mozRequestFullScreen?: () => Promise<void> }).mozRequestFullScreen) {
+      await (elem as unknown as { mozRequestFullScreen: () => Promise<void> }).mozRequestFullScreen();
+    }
+  } catch {
+    // Pengguna menolak atau browser tidak mendukung; abaikan saja
+  }
+}
+
+/**
+ * Keluar dari layar penuh ketika tes selesai.
+ */
+async function exitFullscreen() {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if ((document as unknown as { webkitFullscreenElement?: unknown }).webkitFullscreenElement) {
+      (document as unknown as { webkitCancelFullscreen?: () => Promise<void> }).webkitCancelFullscreen?.();
+    } else if ((document as unknown as { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen) {
+      await (document as unknown as { mozCancelFullScreen: () => Promise<void> }).mozCancelFullScreen();
+    }
+  } catch {
+    // abaikan
+  }
+}
+
 onMounted(() => {
   init();
 });
 
 onUnmounted(() => {
   stopTimer();
+  void exitFullscreen();
 });
 </script>
 

@@ -1,0 +1,31 @@
+{
+  "name": "TKD Setra - Online Test",
+  "short_name": "TKD Setra",
+  "description": "Online Test Application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fef9ef",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "96x96",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon"
+    }
+  ]
+}
