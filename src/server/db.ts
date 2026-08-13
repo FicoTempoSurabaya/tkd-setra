@@ -10,8 +10,8 @@ const { Pool: PgPool } = pg;
 
 let pool: Pool | null = null;
 
-const MAX_RETRIES = 3;
-const RETRY_BASE_DELAY_MS = 500;
+const MAX_RETRIES = 2;
+const RETRY_BASE_DELAY_MS = 200;
 
 function isTransientError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false;
@@ -54,11 +54,11 @@ export function getPool(): Pool {
     ssl: process.env.PG_SSL === 'true'
       ? { rejectUnauthorized: process.env.PG_SSL_REJECT_UNAUTHORIZED === 'true' }
       : false,
-    max: 5, // Reduced for serverless (concurrency per function instance)
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 15000,
+    max: 3,                      // Minimal untuk serverless
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 5000, // Agresif: gagal cepat agar ada waktu retry
     keepAlive: true,
-    keepAliveInitialDelayMillis: 10000,
+    keepAliveInitialDelayMillis: 5000,
   });
 
   pool.on('error', (err) => {

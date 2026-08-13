@@ -3,6 +3,8 @@
  */
 
 import Fastify, { type FastifyInstance } from 'fastify';
+import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
 import { getConfig } from './config.js';
 import { setupAuth } from './auth.js';
 import { participantPublicRoutes, participantAdminRoutes } from './participant.routes.js';
@@ -21,7 +23,7 @@ export async function createFastifyApp(): Promise<FastifyInstance> {
   });
 
   // CORS (same-origin di Vercel, tapi tetap aman)
-  await fastify.register(import('@fastify/cors'), {
+  await fastify.register(cors, {
     origin: config.cors.origin,
     credentials: config.cors.credentials,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
@@ -29,7 +31,7 @@ export async function createFastifyApp(): Promise<FastifyInstance> {
   });
 
   // Multipart
-  await fastify.register(import('@fastify/multipart'), {
+  await fastify.register(multipart, {
     limits: { fileSize: 10 * 1024 * 1024 },
   });
 

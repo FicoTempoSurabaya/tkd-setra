@@ -4,6 +4,8 @@
  */
 
 import argon2 from 'argon2';
+import cookie from '@fastify/cookie';
+import jwt from '@fastify/jwt';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import {
   ADMIN_SESSION_DURATION_SECONDS,
@@ -159,13 +161,11 @@ declare module 'fastify' {
 export async function setupAuth(fastify: FastifyInstance): Promise<void> {
   const config = getConfig();
 
-  const cookieModule = await import('@fastify/cookie');
-  await fastify.register(cookieModule.default, {
+  await fastify.register(cookie, {
     secret: config.jwt.secret,
   });
 
-  const jwtModule = await import('@fastify/jwt');
-  await fastify.register(jwtModule.default, {
+  await fastify.register(jwt, {
     secret: config.jwt.secret,
     sign: {
       expiresIn: ADMIN_SESSION_DURATION_SECONDS,

@@ -8,17 +8,25 @@
  */
 
 import { createFastifyApp } from '../src/server/app.js';
+import { getPool } from '../src/server/db.js';
 import type { FastifyInstance } from 'fastify';
 
 let app: FastifyInstance | null = null;
 
 async function getApp(): Promise<FastifyInstance> {
   if (!app) {
-    app = await createFastifyApp();
+    // Inisialisasi Fastify dan DB pool secara paralel
+    const [fastify] = await Promise.all([
+      createFastifyApp(),
+      // Pre-warm DB pool: buat koneksi pertama saat cold start
+      // sehingga request pertama tidak perlu menunggu DB connect
+      getPool().query('SELECT 1').catch(() => null),
+    ]);
     // Fastify v5: ready() finalizes plugin registration and attaches
     // the request listener to app.server. Without it, app.server.emit('request')
     // may not route correctly.
-    await app.ready();
+    await fastify.ready();
+    app = fastify;
   }
   return app;
 }
