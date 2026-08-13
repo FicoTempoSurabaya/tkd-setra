@@ -298,22 +298,46 @@ export const questionRepository = {
   },
 
   async listActive(): Promise<Question[]> {
+    // Single JOIN query instead of N+1 sequential queries
     const result = await query(
-      'SELECT * FROM question WHERE status = $1 ORDER BY question_order ASC',
+      `SELECT
+         q.*,
+         qo.question_option_id,
+         qo.option_order,
+         qo.option_text,
+         qo.image_url AS option_image_url,
+         qo.is_correct,
+         qo.created_at AS option_created_at,
+         qo.updated_at AS option_updated_at
+       FROM question q
+       LEFT JOIN question_option qo ON qo.question_id = q.question_id
+       WHERE q.status = $1
+       ORDER BY q.question_order ASC, qo.option_order ASC`,
       ['Aktif'],
     );
-    const questions: Question[] = [];
+    // Group rows by question
+    const questionsMap = new Map<string, Question>();
     for (const row of result.rows) {
-      const optionsResult = await query(
-        'SELECT * FROM question_option WHERE question_id = $1 ORDER BY option_order ASC',
-        [row.question_id],
-      );
-      questions.push({
-        ...mapQuestion(row),
-        options: optionsResult.rows.map(mapQuestionOption),
-      });
+      const qid = String(row.question_id);
+      if (!questionsMap.has(qid)) {
+        questionsMap.set(qid, { ...mapQuestion(row), options: [] });
+      }
+      if (row.question_option_id) {
+        questionsMap.get(qid)!.options.push(
+          mapQuestionOption({
+            question_option_id: row.question_option_id,
+            question_id: row.question_id,
+            option_order: row.option_order,
+            option_text: row.option_text,
+            image_url: row.option_image_url,
+            is_correct: row.is_correct,
+            created_at: row.option_created_at,
+            updated_at: row.option_updated_at,
+          }),
+        );
+      }
     }
-    return questions;
+    return Array.from(questionsMap.values());
   },
 
   async listAll(params: {
@@ -440,22 +464,42 @@ export const gameRepository = {
   },
 
   async listActive(): Promise<Game[]> {
+    // Single JOIN query instead of N+1 sequential queries
     const result = await query(
-      'SELECT * FROM game WHERE status = $1 ORDER BY game_order ASC',
+      `SELECT
+         g.*,
+         swi.search_word_item_id,
+         swi.word,
+         swi.word_order,
+         swi.created_at AS item_created_at,
+         swi.updated_at AS item_updated_at
+       FROM game g
+       LEFT JOIN search_word_item swi ON swi.game_id = g.game_id
+       WHERE g.status = $1
+       ORDER BY g.game_order ASC, swi.word_order ASC`,
       ['Aktif'],
     );
-    const games: Game[] = [];
+    // Group rows by game
+    const gamesMap = new Map<string, Game>();
     for (const row of result.rows) {
-      const itemsResult = await query(
-        'SELECT * FROM search_word_item WHERE game_id = $1 ORDER BY word_order ASC',
-        [row.game_id],
-      );
-      games.push({
-        ...mapGame(row),
-        searchWordItems: itemsResult.rows.map(mapSearchWordItem),
-      });
+      const gid = String(row.game_id);
+      if (!gamesMap.has(gid)) {
+        gamesMap.set(gid, { ...mapGame(row), searchWordItems: [] });
+      }
+      if (row.search_word_item_id) {
+        gamesMap.get(gid)!.searchWordItems.push(
+          mapSearchWordItem({
+            search_word_item_id: row.search_word_item_id,
+            game_id: row.game_id,
+            word: row.word,
+            word_order: row.word_order,
+            created_at: row.item_created_at,
+            updated_at: row.item_updated_at,
+          }),
+        );
+      }
     }
-    return games;
+    return Array.from(gamesMap.values());
   },
 
   async listAll(params: {

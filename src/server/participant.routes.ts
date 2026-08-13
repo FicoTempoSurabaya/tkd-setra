@@ -141,7 +141,12 @@ const participant = await participantRepository.create({
     '/start-test/:publicToken',
     async (request: FastifyRequest<{ Params: { publicToken: string } }>, reply: FastifyReply) => {
       const { publicToken } = request.params;
-      const test = await participantTestRepository.findByPublicToken(publicToken);
+
+      // Jalankan query test dan setting secara paralel
+      const [test, setting] = await Promise.all([
+        participantTestRepository.findByPublicToken(publicToken),
+        settingRepository.get(),
+      ]);
 
       if (!test) {
         throw new NotFoundError('Tes tidak ditemukan.');
@@ -151,13 +156,15 @@ const participant = await participantRepository.create({
         throw new ConflictError('Tes sudah dimulai atau selesai.');
       }
 
-      const setting = await settingRepository.get();
       if (setting.maintenanceMode) {
         throw new MaintenanceError('Sistem sedang dalam pemeliharaan.');
       }
 
-      const updatedTest = await participantTestRepository.startTest(test.participantTestId);
-      const quizSnapshot = await snapshotRepository.getQuizSnapshot();
+      // Jalankan startTest dan getQuizSnapshot secara paralel
+      const [updatedTest, quizSnapshot] = await Promise.all([
+        participantTestRepository.startTest(test.participantTestId),
+        snapshotRepository.getQuizSnapshot(),
+      ]);
 
       if (quizSnapshot.length > 0) {
         await participantTestRepository.updateCurrentQuizQuestion(
